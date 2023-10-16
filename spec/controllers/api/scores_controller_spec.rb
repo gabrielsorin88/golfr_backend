@@ -42,6 +42,8 @@ describe Api::ScoresController, type: :request do
       scores = response_hash['scores']
 
       expect(scores.length).to eq(25)
+      expect(scores[0]['played_at']).to eq '2021-06-20'
+      expect(scores[24]['played_at']).to eq '2021-05-20'
     end
   end
 
