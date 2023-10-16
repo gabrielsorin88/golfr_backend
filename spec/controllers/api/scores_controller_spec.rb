@@ -28,6 +28,25 @@ describe Api::ScoresController, type: :request do
     end
   end
 
+  describe 'GET user_feed' do
+    it 'should limit the feed to 25 scores' do
+      30.times do
+        create(:score, user: @user1, total_score: 79, played_at: '2021-05-20')
+      end
+
+      get api_feed_path
+
+      expect(response).to have_http_status(:ok)
+
+      response_hash = JSON.parse(response.body)
+      scores = response_hash['scores']
+
+      expect(scores.length).to eq(25)
+      expect(scores[0]['played_at']).to eq '2021-06-20'
+      expect(scores[24]['played_at']).to eq '2021-05-20'
+    end
+  end
+
   describe 'POST create' do
     it 'should save and return the new score if valid parameters' do
       score_count = Score.count
